@@ -2,6 +2,26 @@
 
 ## React Essentials - Components, JSX, Props, State & More
 
+### Setting Up The Starting Project
+
+The app entry point starts from `index.html`:
+
+```html
+<script
+  type="module"
+  src="/src/index.jsx"
+></script>
+```
+
+Then, `index.jsx`:
+
+```js
+const entryPoint = document.getElementById("root");
+ReactDOM.createRoot(entryPoint).render(<App />);
+```
+
+Finally, `App.jsx` is the root of the components.
+
 ### JSX & React Components
 
 Describe the target UI with JSX
@@ -43,3 +63,63 @@ function Header() {
 ```
 
 ### Making Components Reusable with Props
+
+Key concepts:
+
+- Use props to pass data into components
+- Props accept all value types
+
+The component that's receiving props can just write as receiving one argument called `props`:
+
+```js
+function CoreConcept(props) {
+    ...
+}
+```
+
+React merges all props into one object with key value pairs:
+
+- key is the custom attribute name
+- value is the attribute's value
+
+So the key names will need to be the same (when passing in and when accessing the key's value):
+
+```js
+function CoreConcept(props) {
+  return (
+    <li>
+      <img
+        src={props.image}
+        alt={props.title}
+      />
+      <h3>{props.title}</h3>
+      <p>{props.description}</p>
+    </li>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <Header />
+      <main>
+        <section id="core-concepts">
+          <h2>Core concepts</h2>
+          <ul>
+            <CoreConcept
+              title="Components"
+              description="The core UI building block"
+              image={componentsImg}
+            />
+...
+```
+
+#### Prettier
+
+To automatically split the multi-line props of a component, I set up this Prettier formatting config here like this:
+
+```bash
+echo '{ "singleAttributePerLine": true }' > .prettierrc
+```
+
+This `.prettierrc` file will be created.

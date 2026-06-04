@@ -197,6 +197,7 @@ Create `Project/src/components/Header` folder and put the component and its styl
 ### Component Composition: The special "children" Prop
 
 In `App.jsx`, `Components` text between the opening and closing tags `TabButton` will not be rendered:
+
 ```js
 function App() {
   return (
@@ -223,15 +224,19 @@ Every custom component receives props even if I'm not setting any attributes, Re
 It's an object and will always have a built-in children prop.
 
 I will need to use `props.children` in `TabButton` component:
+
 ```js
 export default function TabButton(props) {
   return (
-      <li><button>{props.children}</button></li>
-  )
+    <li>
+      <button>{props.children}</button>
+    </li>
+  );
 }
 ```
 
 And here remains as is in `App`:
+
 ```js
 <menu>
   <TabButton>Components</TabButton>
@@ -241,55 +246,115 @@ And here remains as is in `App`:
 So, the children prop contains whichever content I have between my component, like some text or some complex JSX structure.
 
 Also, I can use object destructuring here:
+
 ```js
 export default function TabButton({ children }) {
   return (
-      <li><button>{children}</button></li>
-  )
+    <li>
+      <button>{children}</button>
+    </li>
+  );
 }
 ```
 
 And this approach is called Component Composition where we wrap components inside another components.
 
 But it's better to just pass the text down as props:
+
 ```js
 export default function TabButton({ label }) {
   return (
-      <li><button>{label}</button></li>
-  )
+    <li>
+      <button>{label}</button>
+    </li>
+  );
 }
 ```
 
 #### Summary: Children Prop vs Attribute Props
 
 Using children props:
+
 ```js
 <TabButton>Components</TabButton>
 ```
 
 and:
+
 ```js
 export default function TabButton({ children }) {
   return (
-      <li><button>{children}</button></li>
-  )
+    <li>
+      <button>{children}</button>
+    </li>
+  );
 }
 ```
 
 Use case: when the custome component is getting a single piece of renderable content.
 
 Using attribute props:
+
 ```js
 <TabButton label="Components" />
 ```
 
 and:
+
 ```js
 export default function TabButton({ label }) {
   return (
-      <li><button>{label}</button></li>
-  )
+    <li>
+      <button>{label}</button>
+    </li>
+  );
 }
 ```
 
 Use case: when the custom component is getting multiple smaller pieces of information.
+
+### Reacting to Events
+
+In React, I can write declarative code like this to let a Button listen to an event.
+
+There are several built-in support props e.g. on-something props.
+
+For example:
+
+```js
+export default function TabButton({ label }) {
+  return (
+    <li>
+      <button onClick={...}>{label}</button>
+    </li>
+  );
+}
+```
+
+And the onClick prop accepts a function as value, so write like this:
+
+```js
+export default function TabButton({ label }) {
+  function handleClick() {
+    console.log(`You clicked the ${label} tab!`);
+  }
+  return (
+    <li>
+      <button onClick={handleClick}>{label}</button>
+    </li>
+  );
+}
+```
+
+#### Using `onClick={handleClick()}` vs `onClick={handleClick}`
+
+`onClick={handleClick()}` calls the function immediately when the component renders. This is wrong because the button has not been clicked yet.
+
+`onClick={handleClick}` passes the function as a value. React calls it only when the button is clicked.
+
+Key points:
+
+- Adding () calls the function right away, during render.
+- Without (), you pass the function itself as a value.
+- React then calls it later, only when the click event happens.
+- This pattern applies to all event handlers, not just onClick.

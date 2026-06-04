@@ -193,3 +193,103 @@ E.g. `Header.jsx`: use the same name as the component and can use `export defaul
 ### Storing Component Style Files Next To Components
 
 Create `Project/src/components/Header` folder and put the component and its style file together.
+
+### Component Composition: The special "children" Prop
+
+In `App.jsx`, `Components` text between the opening and closing tags `TabButton` will not be rendered:
+```js
+function App() {
+  return (
+    <div>
+      <Header />
+      <main>
+        ...
+        <section id="examples">
+          <h2>Examples</h2>
+          <menu>
+            <TabButton>Components</TabButton>
+          </menu>
+        </section>
+      </main>
+    </div>
+  );
+}
+```
+
+React won't know where to output it.
+
+Every custom component receives props even if I'm not setting any attributes, React will still give me such a props object.
+
+It's an object and will always have a built-in children prop.
+
+I will need to use `props.children` in `TabButton` component:
+```js
+export default function TabButton(props) {
+  return (
+      <li><button>{props.children}</button></li>
+  )
+}
+```
+
+And here remains as is in `App`:
+```js
+<menu>
+  <TabButton>Components</TabButton>
+</menu>
+```
+
+So, the children prop contains whichever content I have between my component, like some text or some complex JSX structure.
+
+Also, I can use object destructuring here:
+```js
+export default function TabButton({ children }) {
+  return (
+      <li><button>{children}</button></li>
+  )
+}
+```
+
+And this approach is called Component Composition where we wrap components inside another components.
+
+But it's better to just pass the text down as props:
+```js
+export default function TabButton({ label }) {
+  return (
+      <li><button>{label}</button></li>
+  )
+}
+```
+
+#### Summary: Children Prop vs Attribute Props
+
+Using children props:
+```js
+<TabButton>Components</TabButton>
+```
+
+and:
+```js
+export default function TabButton({ children }) {
+  return (
+      <li><button>{children}</button></li>
+  )
+}
+```
+
+Use case: when the custome component is getting a single piece of renderable content.
+
+Using attribute props:
+```js
+<TabButton label="Components" />
+```
+
+and:
+```js
+export default function TabButton({ label }) {
+  return (
+      <li><button>{label}</button></li>
+  )
+}
+```
+
+Use case: when the custom component is getting multiple smaller pieces of information.

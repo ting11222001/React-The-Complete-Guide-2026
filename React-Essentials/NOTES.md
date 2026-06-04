@@ -129,6 +129,7 @@ This `.prettierrc` file will be created.
 Created `data.js` which is a named export array with data objects.
 
 In `App.jsx` I can do either way as my `CoreConcept` component is using `props` to represent each object passed in:
+
 ```js
 function CoreConcept(props) {
   return (
@@ -167,6 +168,7 @@ function App() {
 ```
 
 Next, the `CoreConcept` component can use object destructuring syntax to replace `props`:
+
 ```js
 function CoreConcept({ title, description, image }) {
   return (
@@ -181,3 +183,9 @@ function CoreConcept({ title, description, image }) {
   );
 }
 ```
+
+### Storing Components in Files & Using a Good Project Structure
+
+Moving all the components into separate files in `App.jsx`.
+
+E.g. `Header.jsx`: use the same name as the component and can use `export default`.

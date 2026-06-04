@@ -189,3 +189,7 @@ function CoreConcept({ title, description, image }) {
 Moving all the components into separate files in `App.jsx`.
 
 E.g. `Header.jsx`: use the same name as the component and can use `export default`.
+
+### Storing Component Style Files Next To Components
+
+Create `Project/src/components/Header` folder and put the component and its style file together.

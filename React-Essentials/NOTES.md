@@ -317,7 +317,7 @@ Use case: when the custom component is getting multiple smaller pieces of inform
 
 In React, I can write declarative code like this to let a Button listen to an event.
 
-There are several built-in support props e.g. on-something props.
+There are several built-in support props in React e.g. on-something props.
 
 For example:
 
@@ -331,7 +331,7 @@ export default function TabButton({ label }) {
 }
 ```
 
-And the onClick prop accepts a function as value, so write like this:
+So, the onClick prop of the button component can accept a function as value like this:
 
 ```js
 export default function TabButton({ label }) {
@@ -345,6 +345,31 @@ export default function TabButton({ label }) {
   );
 }
 ```
+
+Given the `App` is just refering to the TabButtons:
+```js
+function App() {
+  return (
+    <div>
+      <Header />
+      <main>
+       ...
+        <section id="examples">
+          <h2>Examples</h2>
+          <menu>
+            <TabButton label="Components" />
+            <TabButton label="JSX" />
+            <TabButton label="Props" />
+            <TabButton label="State" />
+          </menu>
+        </section>
+      </main>
+    </div>
+  );
+}
+```
+
+Now whenever the `TabButton` is clicked, it will console log `You clicked the Components tab!`, and so on.
 
 #### Using `onClick={handleClick()}` vs `onClick={handleClick}`
 
@@ -362,7 +387,9 @@ Key points:
 
 ### Passing Functions as Values to Props
 
-We want to see different content based on the selected tab:
+Now, we want to be able to see different content based on the selected tab later.
+
+Start from this code in `App`:
 ```js
 <section id="examples">
   <h2>Examples</h2>
@@ -405,7 +432,7 @@ function App() {
 }
 ```
 
-Now whenever the `TabButton` is clicked, it will console log `You clicked the tab!`.
+Now, whenever the `TabButton` is clicked, it will console log `You clicked the tab!`.
 
 ### Passing Custom Arguments to Event Functions
 

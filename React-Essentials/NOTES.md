@@ -347,13 +347,14 @@ export default function TabButton({ label }) {
 ```
 
 Given the `App` is just refering to the TabButtons:
+
 ```js
 function App() {
   return (
     <div>
       <Header />
       <main>
-       ...
+        ...
         <section id="examples">
           <h2>Examples</h2>
           <menu>
@@ -384,12 +385,12 @@ Key points:
 - React then calls it later, only when the click event happens.
 - This pattern applies to all event handlers, not just onClick.
 
-
 ### Passing Functions as Values to Props
 
 Now, we want to be able to see different content based on the selected tab later.
 
 Start from this code in `App`:
+
 ```js
 <section id="examples">
   <h2>Examples</h2>
@@ -408,6 +409,7 @@ In order to set and update this Dynamic Content in `App` level, we need to liste
 Therefore, in order to make our own tab buttons clickable, what we ultimately wanna do is to set the value for the `onClick` prop on the built-in `button` from outside our custom Component. So, create an `onSelect` prop on our custom tab button in `TabButton` in `App`.
 
 And in `TabButton.jsx`, destruct the prop and wire it to `onClick` this event listener:
+
 ```js
 export default function TabButton({ label, onSelect }) {
   return (
@@ -421,6 +423,7 @@ export default function TabButton({ label, onSelect }) {
 Then, accept a function called `handleSelect` in `TabButton` and its `onSelect` prop in `App` as a value, and the function should be triggered when that button is clicked.
 
 In `App.jsx`:
+
 ```js
 function App() {
   function handleSelect() {
@@ -450,7 +453,6 @@ And this is therefore a very common pattern that's used in React if you wanna de
 
 Therefore, with that, we can now go up to handleSelect and maybe output the selected button here so that we can see whether we get different values for different buttons.
 
-
 ```js
 function App() {
   function handleSelect(selectedTab) {
@@ -466,10 +468,22 @@ function App() {
         <section id="examples">
           <h2>Examples</h2>
           <menu>
-            <TabButton onSelect={() => handleSelect('components')} label="Components" />
-            <TabButton onSelect={() => handleSelect('jsx')} label="JSX" />
-            <TabButton onSelect={() => handleSelect('props')} label="Props" />
-            <TabButton onSelect={() => handleSelect('state')} label="State" />
+            <TabButton
+              onSelect={() => handleSelect("components")}
+              label="Components"
+            />
+            <TabButton
+              onSelect={() => handleSelect("jsx")}
+              label="JSX"
+            />
+            <TabButton
+              onSelect={() => handleSelect("props")}
+              label="Props"
+            />
+            <TabButton
+              onSelect={() => handleSelect("state")}
+              label="State"
+            />
           </menu>
           Dynamic Content Goes Here!
         </section>
@@ -480,6 +494,7 @@ function App() {
 ```
 
 Given the `TabButton` is still this:
+
 ```js
 export default function TabButton({ label, onSelect }) {
   return (
@@ -491,13 +506,21 @@ export default function TabButton({ label, onSelect }) {
 ```
 
 Note that if I just write this, then handleSelect will only render once when the component is up:
+
 ```js
-<TabButton onSelect={handleSelect('components')} label="Components" />
+<TabButton
+  onSelect={handleSelect("components")}
+  label="Components"
+/>
 ```
 
 Only by writing this, then handleSelect will be triggered when the tab is clicked.
+
 ```js
-<TabButton onSelect={() => handleSelect('components')} label="Components" />
+<TabButton
+  onSelect={() => handleSelect("components")}
+  label="Components"
+/>
 ```
 
 #### Why `handleSelect` should live in `App` level instead of `TabButton`
@@ -506,16 +529,18 @@ The next step is usually to add a useState to track which tab is selected, and r
 
 The general rule to remember: lift state and handlers up to the lowest common ancestor of all the components that need to read or change that data. Here that ancestor is App.
 
-###  How NOT to Update the UI - A Look Behind The Scenes of React
+### How NOT to Update the UI - A Look Behind The Scenes of React
 
-By defauly, React component gets executed only once. 
+By defauly, React component gets executed only once.
 
 So `App` component got rendered once in `index.jsx`:
+
 ```js
 ReactDOM.createRoot(entryPoint).render(<App />);
 ```
 
 Also, `TabButton` got rendered once (there are four of them) in the `App`:
+
 ```js
 function App() {
   ...
@@ -527,6 +552,7 @@ function App() {
 ```
 
 And:
+
 ```js
 export default function TabButton({ label, onSelect }) {
   console.log(`Rendering TabButton component with label: ${label}`);
@@ -537,6 +563,7 @@ export default function TabButton({ label, onSelect }) {
 I can add console log directly in the component function to prove it's rendered once.
 
 The console will show:
+
 ```
 Rendering App component...
 Rendering TabButton component with label: Components
@@ -546,6 +573,7 @@ Rendering TabButton component with label: State
 ```
 
 And when clicking on the tab it will trigger `handleSelect` to console log each tab's strings:
+
 ```
 components
 jsx
@@ -553,8 +581,42 @@ props
 state
 ```
 
-But the `{tabContent}` in the `App`component will stay the same with the default value `Please click a tab to see the content!` because `App` component doesn't re-render, so the default value will not change to `components`, `jsx`, etc. 
+But the `{tabContent}` in the `App`component will stay the same with the default value `Please click a tab to see the content!` because `App` component doesn't re-render, so the default value will not change to `components`, `jsx`, etc.
 
 So we need a way to let `App` component know it should be executed again.
 
 That's what `State` is about.
+
+### Managing State & Using Hooks
+
+We need to tell React that data changed and that will therefore cause React to update the UI.
+
+And these special variables are created with help of a special function that must be imported from the React library.
+
+The special function is `useState`. All these functions that start with `use` in React projects are React Hooks.
+
+They're technically regular functions, but they must only be called inside of React component functions or inside of other React Hooks like custom hooks.
+
+Also, I must call it on the top level of the component function.
+
+`useState()` yields an array with two elements - we usually use array destructuring to store these two elements in two separate constants.
+
+I can use any names but there are some naming conventions.
+
+`useState` has the initial state value. `selectedTopic` is the current state value. `setSelectedTopic` is the state updating function and it will updates the stored value AND tells React to re-execute the component function in which `useState()` was called:
+```js
+const [selectedTopic, setSelectedTopic] = useState('Please click a tab to see the content!');
+```
+
+One interesting thing to note is that the updated state value will only be ready after the component is re-rendered.
+
+For example, in `handleSelect`, doing console log on the `selectedTopic` will give me the old value, even though it's called after ` setSelectedTopic(selectedTab);`:
+```js
+function App() {
+  const [selectedTopic, setSelectedTopic] = useState('Please click a tab to see the content!');
+
+  function handleSelect(selectedTab) {
+    setSelectedTopic(selectedTab);
+    console.log(selectedTopic);
+  }
+```

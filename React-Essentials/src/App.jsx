@@ -3,15 +3,14 @@ import Header from "./components/Header/Header";
 import CoreConcept from "./components/CoreConcept";
 import { CORE_CONCEPTS } from "./data";
 import TabButton from "./components/TabButton";
+import { useState } from "react";
 
 function App() {
-  let tabContent = 'Please click a tab to see the content!';
+  const [selectedTopic, setSelectedTopic] = useState('Please click a tab to see the content!');
 
   function handleSelect(selectedTab) {
-    // selectedTab => 'components', 'jsx', 'props', 'state'
-    // console.log(`You clicked the ${selectedTab} tab!`);
-    tabContent = selectedTab;
-    console.log(tabContent);
+    // selectedTopic => 'components', 'jsx', 'props', 'state'
+    setSelectedTopic(selectedTab);
   }
 
   console.log('Rendering App component...');
@@ -41,7 +40,7 @@ function App() {
             <TabButton onSelect={() => handleSelect('props')} label="Props" />
             <TabButton onSelect={() => handleSelect('state')} label="State" />
           </menu>
-          {tabContent}
+          {selectedTopic}
         </section>
       </main>
     </div>

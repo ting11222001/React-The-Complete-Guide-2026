@@ -358,3 +358,125 @@ Key points:
 - Without (), you pass the function itself as a value.
 - React then calls it later, only when the click event happens.
 - This pattern applies to all event handlers, not just onClick.
+
+
+### Passing Functions as Values to Props
+
+We want to see different content based on the selected tab:
+```js
+<section id="examples">
+  <h2>Examples</h2>
+  <menu>
+    <TabButton label="Components" />
+    <TabButton label="JSX" />
+    <TabButton label="Props" />
+    <TabButton label="State" />
+  </menu>
+  Dynamic Content Goes Here!
+</section>
+```
+
+In order to set and update this Dynamic Content in `App` level, we need to listen to clicks on our custom button, TabButton.
+
+Therefore, in order to make our own tab buttons clickable, what we ultimately wanna do is to set the value for the `onClick` prop on the built-in `button` from outside our custom Component. So, create an `onSelect` prop on our custom tab button in `TabButton` in `App`.
+
+And in `TabButton.jsx`, destruct the prop and wire it to `onClick` this event listener:
+```js
+export default function TabButton({ label, onSelect }) {
+  return (
+    <li>
+      <button onClick={onSelect}>{label}</button>
+    </li>
+  );
+}
+```
+
+Then, accept a function called `handleSelect` in `TabButton` and its `onSelect` prop in `App` as a value, and the function should be triggered when that button is clicked.
+
+In `App.jsx`:
+```js
+function App() {
+  function handleSelect() {
+    console.log(`You clicked the tab!`);
+  }
+  ...
+  <TabButton onSelect={handleSelect} label="Components" />
+  ...
+}
+```
+
+Now whenever the `TabButton` is clicked, it will console log `You clicked the tab!`.
+
+### Passing Custom Arguments to Event Functions
+
+If we want to pass parameters like identifiers of the tab into the `handleSelect` function and eventually use a `if` check to replace the Dynamic Content properly, what we'll have to do is to control how handleSelect will be executed by React.
+
+And we can do this by, instead of pointing at this handle select function here, we can pass an arrow function to onSelect. So now instead of just passing handleSelect here, I'm passing this arrow function as a value to onSelect.
+
+This anonymous arrow function will not run immediately when this line of code gets parsed. Instead, when that line of code gets parsed it's just this arrow function that will be defined.
+
+And this arrow function is then passed as a value to the tap button on this onSelect prop.
+
+And therefore, when this function is executed i.e. when the button was clicked, pass this components string identifier to it. We can now use this code here for all these tab buttons and pass different identifiers to handleSelect based on which button was pressed.
+
+And this is therefore a very common pattern that's used in React if you wanna define a function that should be executed upon an event, but you also want to control how it's going to be called and which arguments are going to be passed to it.
+
+Therefore, with that, we can now go up to handleSelect and maybe output the selected button here so that we can see whether we get different values for different buttons.
+
+
+```js
+function App() {
+  function handleSelect(selectedTab) {
+    // selectedTab => 'components', 'jsx', 'props', 'state'
+    console.log(`You clicked the ${selectedTab} tab!`);
+  }
+
+  return (
+    <div>
+      <Header />
+      <main>
+        ...
+        <section id="examples">
+          <h2>Examples</h2>
+          <menu>
+            <TabButton onSelect={() => handleSelect('components')} label="Components" />
+            <TabButton onSelect={() => handleSelect('jsx')} label="JSX" />
+            <TabButton onSelect={() => handleSelect('props')} label="Props" />
+            <TabButton onSelect={() => handleSelect('state')} label="State" />
+          </menu>
+          Dynamic Content Goes Here!
+        </section>
+      </main>
+    </div>
+  );
+}
+```
+
+Given the `TabButton` is still this:
+```js
+export default function TabButton({ label, onSelect }) {
+  return (
+    <li>
+      <button onClick={onSelect}>{label}</button>
+    </li>
+  );
+}
+```
+
+Note that if I just write this, then handleSelect will only render once when the component is up:
+```js
+<TabButton onSelect={handleSelect('components')} label="Components" />
+```
+
+Only by writing this, then handleSelect will be triggered when the tab is clicked.
+```js
+<TabButton onSelect={() => handleSelect('components')} label="Components" />
+```
+
+#### Why `handleSelect` should live in `App` level instead of `TabButton`
+
+The next step is usually to add a useState to track which tab is selected, and render different content based on that. That state must live in App for the same reason: it needs to be shared across both <menu> and the content section.
+
+The general rule to remember: lift state and handlers up to the lowest common ancestor of all the components that need to read or change that data. Here that ancestor is App.
+
+###  How NOT to Update the UI - A Look Behind The Scenes of React

@@ -507,3 +507,54 @@ The next step is usually to add a useState to track which tab is selected, and r
 The general rule to remember: lift state and handlers up to the lowest common ancestor of all the components that need to read or change that data. Here that ancestor is App.
 
 ###  How NOT to Update the UI - A Look Behind The Scenes of React
+
+By defauly, React component gets executed only once. 
+
+So `App` component got rendered once in `index.jsx`:
+```js
+ReactDOM.createRoot(entryPoint).render(<App />);
+```
+
+Also, `TabButton` got rendered once (there are four of them) in the `App`:
+```js
+function App() {
+  ...
+  console.log('Rendering App component...');
+
+  return (
+    <div>
+      ...
+```
+
+And:
+```js
+export default function TabButton({ label, onSelect }) {
+  console.log(`Rendering TabButton component with label: ${label}`);
+  return (
+   ...
+```
+
+I can add console log directly in the component function to prove it's rendered once.
+
+The console will show:
+```
+Rendering App component...
+Rendering TabButton component with label: Components
+Rendering TabButton component with label: JSX
+Rendering TabButton component with label: Props
+Rendering TabButton component with label: State
+```
+
+And when clicking on the tab it will trigger `handleSelect` to console log each tab's strings:
+```
+components
+jsx
+props
+state
+```
+
+But the `{tabContent}` in the `App`component will stay the same with the default value `Please click a tab to see the content!` because `App` component doesn't re-render, so the default value will not change to `components`, `jsx`, etc. 
+
+So we need a way to let `App` component know it should be executed again.
+
+That's what `State` is about.

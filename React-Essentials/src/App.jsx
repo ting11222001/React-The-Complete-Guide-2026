@@ -5,10 +5,16 @@ import { CORE_CONCEPTS } from "./data";
 import TabButton from "./components/TabButton";
 
 function App() {
+  let tabContent = 'Please click a tab to see the content!';
+
   function handleSelect(selectedTab) {
     // selectedTab => 'components', 'jsx', 'props', 'state'
-    console.log(`You clicked the ${selectedTab} tab!`);
+    // console.log(`You clicked the ${selectedTab} tab!`);
+    tabContent = selectedTab;
+    console.log(tabContent);
   }
+
+  console.log('Rendering App component...');
 
   return (
     <div>
@@ -35,7 +41,7 @@ function App() {
             <TabButton onSelect={() => handleSelect('props')} label="Props" />
             <TabButton onSelect={() => handleSelect('state')} label="State" />
           </menu>
-          Dynamic Content Goes Here!
+          {tabContent}
         </section>
       </main>
     </div>

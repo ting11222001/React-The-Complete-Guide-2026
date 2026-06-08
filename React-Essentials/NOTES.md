@@ -1,5 +1,9 @@
 # Notes
 
+## JavaScript Refresher
+
+It's in this repo [here](https://github.com/ting11222001/JavaScript-Refresher-2026).
+
 ## React Essentials - Components, JSX, Props, State & More
 
 ### Setting Up The Starting Project
@@ -847,23 +851,27 @@ And in `App`:
             <TabButton
               isSelected={selectedTopic === "components"}
               onSelect={() => handleSelect("components")}
-              label="Components"
-            />
+            >
+              Components
+            </TabButton>
             <TabButton
               isSelected={selectedTopic === "jsx"}
               onSelect={() => handleSelect("jsx")}
-              label="JSX"
-            />
+            >
+              JSX
+            </TabButton>
             <TabButton
               isSelected={selectedTopic === "props"}
               onSelect={() => handleSelect("props")}
-              label="Props"
-            />
+            >
+              Props
+            </TabButton>
             <TabButton
               isSelected={selectedTopic === "state"}
               onSelect={() => handleSelect("state")}
-              label="State"
-            />
+            >
+              State
+            </TabButton>
           </menu>
           {tabContent}
         </section>
@@ -911,3 +919,5 @@ Now it's:
     </section>
 ...
 ```
+
+## React Essentials - Deep Dive

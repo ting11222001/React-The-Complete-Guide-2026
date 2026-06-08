@@ -1,9 +1,9 @@
-export default function TabButton({ label, onSelect, isSelected }) {
+export default function TabButton({ children, onSelect, isSelected }) {
   console.log('Rendering TabButton component...');
   return (
     <li>
       <button className={isSelected ? "active" : undefined} onClick={onSelect}>
-        {label}
+        {children}
       </button>
     </li>
   );

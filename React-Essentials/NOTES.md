@@ -870,3 +870,44 @@ And in `App`:
       </main>
     </div>
 ```
+
+### Outputting List Data Dynamically
+
+What if the data source `CoreConcepts` array has changed?
+
+Use `map` function which creates a new array and then run lambda function on each element of the array.
+
+Originally it looks like this:
+```js
+<div>
+  <Header />
+  <main>
+    <section id="core-concepts">
+      <h2>Core concepts</h2>
+      <ul>
+        <CoreConcept
+          title={CORE_CONCEPTS[0].title}
+          description={CORE_CONCEPTS[0].description}
+          image={CORE_CONCEPTS[0].image}
+        />
+        <CoreConcept {...CORE_CONCEPTS[1]} />
+        <CoreConcept {...CORE_CONCEPTS[2]} />
+        <CoreConcept {...CORE_CONCEPTS[3]} />
+      </ul>
+    </section>
+    ...
+```
+
+Now it's:
+```js
+<div>
+  <Header />
+  <main>
+    <section id="core-concepts">
+      <h2>Core concepts</h2>
+      <ul>
+        {CORE_CONCEPTS.map((concept) => <CoreConcept key={concept.title} {...concept} />)}
+      </ul>
+    </section>
+...
+```

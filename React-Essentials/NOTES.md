@@ -664,3 +664,135 @@ function App() {
   );
 }
 ```
+
+### Quiz: State & Computed Values
+
+#### Two Rules of Hooks in React
+
+1. Only call Hooks at the top level
+
+Do not call Hooks inside loops, conditions, or nested functions. Always call them at the top of your React function, before any early returns. This ensures Hooks are called in the same order every time a component renders.
+
+2. Only call Hooks from React functions
+
+Call Hooks from React function components or from custom Hooks. Do not call them from regular JavaScript functions.
+
+For example, in `App` I have this line:
+```js
+const [selectedTopic, setSelectedTopic] = useState('components');
+```
+
+#### The idea behind Derived State aka Computed Values
+
+Computed values are values that shouldn't be managed as separate state since they can be derived from other states.
+
+So they never go out of sync.
+
+Key points:
+- If you can calculate it from existing state, don't store it as its own state
+- Separate storage creates sync bugs when one piece updates but the other doesn't
+- Frameworks like Vue use computed(), React uses plain variables or useMemo(), Angular uses getters
+- Only use memoisation (useMemo, computed) when the calculation is actually slow
+
+Claude's example snippet (if one was used to explain):
+```js
+const items = [
+  { name: "Apple", price: 1.50, qty: 3 },
+  { name: "Bread", price: 3.00, qty: 1 }
+];
+
+// Derived. Always correct. No separate storage needed.
+const totalPrice = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+```
+
+### Rendering Content Conditionally
+
+Use ternary expressions or ampersand symbols.
+
+For example use ternary expressions is shorter:
+```js
+<section id="examples">
+  <h2>Examples</h2>
+  <menu>
+    ...
+  </menu>
+  {selectedTopic ? (
+    <div id="tab-content">
+        <h3>{EXAMPLES[selectedTopic]?.title}</h3>
+        <p>{EXAMPLES[selectedTopic]?.description}</p>
+        <pre>
+          <code>{EXAMPLES[selectedTopic]?.code}</code>
+        </pre>
+    </div>
+  ) : (
+    <p>Please select a topic to see the example.</p>
+  )}
+</section>
+```
+
+or use two ampersand symbols for the AND operation, though longer but can be more understandable sometimes:
+```js
+<section id="examples">
+  <h2>Examples</h2>
+  <menu>
+    ...
+  </menu>
+  {!selectedTopic && <p>Please select a topic to see the example.</p>}
+  {selectedTopic && (
+    <div id="tab-content">
+        <h3>{EXAMPLES[selectedTopic]?.title}</h3>
+        <p>{EXAMPLES[selectedTopic]?.description}</p>
+        <pre>
+          <code>{EXAMPLES[selectedTopic]?.code}</code>
+        </pre>
+    </div>
+  )}
+</section>
+```
+
+Or use `tabContent` a variable to store the JSX code, so we can set the variable before we start to return the entire JSX code of the `App`. This leads to a leander JSX code:
+```js
+function App() {
+  const [selectedTopic, setSelectedTopic] = useState();
+
+  function handleSelect(selectedTab) {
+    // selectedTopic => 'components', 'jsx', 'props', 'state'
+    setSelectedTopic(selectedTab);
+  }
+
+  let tabContent = <p>Please select a topic to see the example.</p>;
+
+  if (selectedTopic) {
+    tabContent = (
+      <div id="tab-content">
+          <h3>{EXAMPLES[selectedTopic]?.title}</h3>
+          <p>{EXAMPLES[selectedTopic]?.description}</p>
+          <pre>
+            <code>{EXAMPLES[selectedTopic]?.code}</code>
+          </pre>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Header />
+      <main>
+        ...
+        <section id="examples">
+          <h2>Examples</h2>
+          <menu>
+            <TabButton onSelect={() => handleSelect('components')} label="Components" />
+            <TabButton onSelect={() => handleSelect('jsx')} label="JSX" />
+            <TabButton onSelect={() => handleSelect('props')} label="Props" />
+            <TabButton onSelect={() => handleSelect('state')} label="State" />
+          </menu>
+          {tabContent}
+        </section>
+      </main>
+    </div>
+  );
+}
+```
+
+### CSS Styling & Dynamic Styling

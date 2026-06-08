@@ -441,7 +441,7 @@ Now, whenever the `TabButton` is clicked, it will console log `You clicked the t
 
 If we want to pass parameters like identifiers of the tab into the `handleSelect` function and eventually use a `if` check to replace the Dynamic Content properly, what we'll have to do is to control how handleSelect will be executed by React.
 
-And we can do this by, instead of pointing at this handle select function here, we can pass an arrow function to onSelect. So now instead of just passing handleSelect here, I'm passing this arrow function as a value to onSelect.
+And we can do this by, instead of pointing at this handle select function here, we can pass an arrow function to onSelect.
 
 This anonymous arrow function will not run immediately when this line of code gets parsed. Instead, when that line of code gets parsed it's just this arrow function that will be defined.
 
@@ -619,4 +619,48 @@ function App() {
     setSelectedTopic(selectedTab);
     console.log(selectedTopic);
   }
+```
+
+### Deriving & Outputting Data Based on State
+
+In `data.js`, add `EXAMPLES` array. Each property is the same as the selected key as the `handleSelect` in `App`.
+
+The default `selectedTopic` should be `components`.
+
+Each tab content will be in the `<div>`.
+
+```js
+function App() {
+  const [selectedTopic, setSelectedTopic] = useState('components');
+
+  function handleSelect(selectedTab) {
+    // selectedTopic => 'components', 'jsx', 'props', 'state'
+    setSelectedTopic(selectedTab);
+  }
+
+  return (
+    <div>
+      <Header />
+      <main>
+        ...
+        <section id="examples">
+          <h2>Examples</h2>
+          <menu>
+            <TabButton onSelect={() => handleSelect('components')} label="Components" />
+            <TabButton onSelect={() => handleSelect('jsx')} label="JSX" />
+            <TabButton onSelect={() => handleSelect('props')} label="Props" />
+            <TabButton onSelect={() => handleSelect('state')} label="State" />
+          </menu>
+          <div id="tab-content">
+            <h3>{EXAMPLES[selectedTopic]?.title}</h3>
+            <p>{EXAMPLES[selectedTopic]?.description}</p>
+            <pre>
+              <code>{EXAMPLES[selectedTopic]?.code}</code>
+            </pre>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
 ```

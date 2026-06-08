@@ -1,12 +1,12 @@
 import componentsImg from "./assets/components.png";
 import Header from "./components/Header/Header";
 import CoreConcept from "./components/CoreConcept";
-import { CORE_CONCEPTS } from "./data";
+import { CORE_CONCEPTS, EXAMPLES } from "./data";
 import TabButton from "./components/TabButton";
 import { useState } from "react";
 
 function App() {
-  const [selectedTopic, setSelectedTopic] = useState('Please click a tab to see the content!');
+  const [selectedTopic, setSelectedTopic] = useState('components');
 
   function handleSelect(selectedTab) {
     // selectedTopic => 'components', 'jsx', 'props', 'state'
@@ -40,7 +40,13 @@ function App() {
             <TabButton onSelect={() => handleSelect('props')} label="Props" />
             <TabButton onSelect={() => handleSelect('state')} label="State" />
           </menu>
-          {selectedTopic}
+          <div id="tab-content">
+            <h3>{EXAMPLES[selectedTopic]?.title}</h3>
+            <p>{EXAMPLES[selectedTopic]?.description}</p>
+            <pre>
+              <code>{EXAMPLES[selectedTopic]?.code}</code>
+            </pre>
+          </div>
         </section>
       </main>
     </div>

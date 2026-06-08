@@ -18,16 +18,16 @@ function App() {
   if (selectedTopic) {
     tabContent = (
       <div id="tab-content">
-          <h3>{EXAMPLES[selectedTopic]?.title}</h3>
-          <p>{EXAMPLES[selectedTopic]?.description}</p>
-          <pre>
-            <code>{EXAMPLES[selectedTopic]?.code}</code>
-          </pre>
+        <h3>{EXAMPLES[selectedTopic]?.title}</h3>
+        <p>{EXAMPLES[selectedTopic]?.description}</p>
+        <pre>
+          <code>{EXAMPLES[selectedTopic]?.code}</code>
+        </pre>
       </div>
     );
   }
 
-  console.log('Rendering App component...');
+  console.log("Rendering App component...");
 
   return (
     <div>
@@ -49,10 +49,26 @@ function App() {
         <section id="examples">
           <h2>Examples</h2>
           <menu>
-            <TabButton onSelect={() => handleSelect('components')} label="Components" />
-            <TabButton onSelect={() => handleSelect('jsx')} label="JSX" />
-            <TabButton onSelect={() => handleSelect('props')} label="Props" />
-            <TabButton onSelect={() => handleSelect('state')} label="State" />
+            <TabButton
+              isSelected={selectedTopic === "components"}
+              onSelect={() => handleSelect("components")}
+              label="Components"
+            />
+            <TabButton
+              isSelected={selectedTopic === "jsx"}
+              onSelect={() => handleSelect("jsx")}
+              label="JSX"
+            />
+            <TabButton
+              isSelected={selectedTopic === "props"}
+              onSelect={() => handleSelect("props")}
+              label="Props"
+            />
+            <TabButton
+              isSelected={selectedTopic === "state"}
+              onSelect={() => handleSelect("state")}
+              label="State"
+            />
           </menu>
           {tabContent}
         </section>

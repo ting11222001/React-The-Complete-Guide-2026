@@ -796,3 +796,77 @@ function App() {
 ```
 
 ### CSS Styling & Dynamic Styling
+
+Use `className` instead of `class` in JSX for class styling attributes on a component:
+```js
+export default function TabButton({ label, onSelect }) {
+  console.log('Rendering TabButton component...');
+  return (
+    <li>
+      <button className="active" onClick={onSelect}>{label}</button>
+    </li>
+  );
+}
+```
+
+Given in `index.css` I have:
+```css
+#examples menu button.active {
+  background-color: #7925d3;
+  color: #ebe7ef;
+}
+```
+
+Next, I want to set the `active` styling dynamically i.e. only those are selected should be styled as `active`.
+
+Use ternary expressions in this button styling class attribute.
+
+In `TabButton`:
+```js
+export default function TabButton({ label, onSelect, isSelected }) {
+  console.log('Rendering TabButton component...');
+  return (
+    <li>
+      <button className={isSelected ? "active" : undefined} onClick={onSelect}>
+        {label}
+      </button>
+    </li>
+  );
+}
+```
+
+And in `App`:
+```js
+ <div>
+      <Header />
+      <main>
+       ...
+        <section id="examples">
+          <h2>Examples</h2>
+          <menu>
+            <TabButton
+              isSelected={selectedTopic === "components"}
+              onSelect={() => handleSelect("components")}
+              label="Components"
+            />
+            <TabButton
+              isSelected={selectedTopic === "jsx"}
+              onSelect={() => handleSelect("jsx")}
+              label="JSX"
+            />
+            <TabButton
+              isSelected={selectedTopic === "props"}
+              onSelect={() => handleSelect("props")}
+              label="Props"
+            />
+            <TabButton
+              isSelected={selectedTopic === "state"}
+              onSelect={() => handleSelect("state")}
+              label="State"
+            />
+          </menu>
+          {tabContent}
+        </section>
+      </main>
+    </div>
+```
